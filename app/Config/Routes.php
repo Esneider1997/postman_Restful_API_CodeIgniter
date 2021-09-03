@@ -43,6 +43,12 @@ $routes->group('api', ['namespace' => 'App\Controllers\API'], function($routes){
 	$routes->put('clientes/update/(:num)', 'Clientes::update/$1');
 	$routes->delete('clientes/delete/(:num)', 'Clientes::delete/$1');
 
+	$routes->get('tipostransaccion', 'TiposTransaccion::index');
+	$routes->post('tipostransaccion/create', 'TiposTransaccion::create');
+	$routes->get('tipostransaccion/edit/(:num)', 'TiposTransaccion::edit/$1');
+	$routes->put('tipostransaccion/update/(:num)', 'TiposTransaccion::update/$1');
+	$routes->delete('tipostransaccion/delete/(:num)', 'TiposTransaccion::delete/$1');
+
 	$routes->get('cuentas', 'Cuentas::index');
 	$routes->post('cuentas/create', 'Cuentas::create');
 	$routes->get('cuentas/edit/(:num)', 'Cuentas::edit/$1');
