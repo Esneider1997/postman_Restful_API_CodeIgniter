@@ -37,7 +37,7 @@ class Clientes extends ResourceController
 				return $this->failValidationErrors('No se ha pasado un Id valido');
 			$cliente = $this->model->find($id);
 			if ($cliente == null)
-				return $this->failNotFound('No se ha encontrado un cliente con el id	 '.$id);
+				return $this->failNotFound('No se ha encontrado un cliente con el id '.$id);
 			return $this->respond($cliente) ;
 		} catch (\Exception $e) {
 			return $this->failServerError('Ha ocurrido un error en el servidor');
