@@ -4,7 +4,10 @@ namespace App\Controllers\API;
 
 use App\Models\TransaccionModel;
 use App\Models\CuentaModel;
+use App\Models\ClienteModel;
 use CodeIgniter\RESTful\ResourceController;
+
+use function PHPUnit\Framework\returnSelf;
 
 class Transacciones extends ResourceController
 {
@@ -51,7 +54,16 @@ class Transacciones extends ResourceController
 	 */
 	public function edit($id = null)
 	{
-		//
+		try {
+			if($id==null)
+				return $this->failValidationErrors('No se ha pasado un Id valido');
+			$transaccion = $this->model->find($id);
+			if($transaccion == null)
+				return $this->failNotFound('No se ha encontrado la transaccion con el id '.$id);
+			return $this->respond($transaccion);
+		} catch (\Exception $e) {
+			return $this->failServerError(' Ha ocurrido un error en el servidor '.$e);
+		}
 	}
 
 	/**
@@ -61,7 +73,25 @@ class Transacciones extends ResourceController
 	 */
 	public function update($id = null)
 	{
-		//
+		try {
+			/* $valido = $this->request->getJSON();
+			var_dump($valido); */
+			if($id == null)
+				return $this->failValidationErrors('No se ha pasado un Id valido');
+			
+			$transaccionVerificada = $this->model->find($id);
+			if($transaccionVerificada == null)
+				return $this->failNotFound('No se ha encontrado una transaccion con ese ID');
+			
+			$transaccion = $this->request->getJSON();
+			if($this->model->update($id, $transaccion)):
+				return $this->respondUpdated($transaccion);
+			else:
+				return $this->failValidationErrors($this->model->validation->listErrors());
+			endif;
+		} catch (\Exception  $e) {
+			return $this->failServerError('Ha ocurrido un error en el servidor'.$e);
+		}
 	}
 
 	/**
@@ -74,6 +104,26 @@ class Transacciones extends ResourceController
 		//
 	}
 
+	public function getTransaccionesByCliente($id = null){
+		try {
+			$modelCliente = new ClienteModel();
+
+			if($id == null)
+				return $this->failValidationErrors('No se ha encontrado un ID valido');
+
+			$cliente = $modelCliente->find($id);
+			if($cliente == null)
+				return $this->failNotFound('No se ha encontrado un cliente con el id: '.$id);
+
+			$transacciones = $this->model->TransaccionesPorCliente($id); 
+		
+			return $this->respond($transacciones);
+
+		} catch (\Exception $e) {
+			return $this->failServerError('Ha ocurrido un problema con el servidor '.$e);
+		}
+	}
+
 	private function actualizarFondoCuenta($tipoTransaccionId, $monto, $cuentaId)
 	{
 		$modelCuenta = new CuentaModel();
@@ -84,7 +134,7 @@ class Transacciones extends ResourceController
 				$cuenta["fondo"] += $monto;
 				break;
 			case 2:
-				$cuenta["fondo"] += $monto;
+				$cuenta["fondo"] -= $monto;
 				break;
 		}
 
