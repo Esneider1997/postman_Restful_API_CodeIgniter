@@ -6,9 +6,6 @@ use App\Models\TransaccionModel;
 use App\Models\CuentaModel;
 use App\Models\ClienteModel;
 use CodeIgniter\RESTful\ResourceController;
-
-use function PHPUnit\Framework\returnSelf;
-
 class Transacciones extends ResourceController
 {
 	public function __construct()
@@ -101,7 +98,20 @@ class Transacciones extends ResourceController
 	 */
 	public function delete($id = null)
 	{
-		//
+		try {
+			if($id == null)
+				return $this->failValidationErrors('No se ha pasado un ID valido');
+			$transaccionVerificada = $this->model->find($id);
+			if($transaccionVerificada == null)
+				return $this->failNotFound('No se ha encontrado una transaccion con el ID: '.$id);
+			if($this->model->delete($id)):
+				return $this->respondDeleted($transaccionVerificada);
+			else:
+				return $this->failServerError('No se pudo eliminar el registro');
+			endif;
+		} catch (\Exception $e) {
+				return $this->failServerError('Ha ocurrido un error en el servidor '.$e);
+		}
 	}
 
 	public function getTransaccionesByCliente($id = null){

@@ -34,6 +34,13 @@ $routes->setAutoRoute(true);
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
 
+$routes->get('/auth/login', 'Auth::login');
+$routes->get('/auth/usuarios', 'Usuarios::index');
+
+$routes->group('api', ['namespace' => 'App\Controllers\API'], function ($routes){
+	$routes->get('usuarios', 'Usuarios::index');
+});
+
 
 $routes->group('api', ['namespace' => 'App\Controllers\API'], function($routes){
 	//http://localhost/App/api/clientes --> GET
@@ -60,7 +67,10 @@ $routes->group('api', ['namespace' => 'App\Controllers\API'], function($routes){
 	$routes->get('transacciones/edit/(:num)', 'Transacciones::edit/$1');
 	$routes->put('transacciones/update/(:num)', 'Transacciones::update/$1');
 	$routes->delete('transacciones/delete/(:num)', 'Transacciones::delete/$1');
-	$routes->delete('transacciones/cliente/(:num)', 'Transacciones::getTransaccionesByCliente/$1');
+	$routes->get('transacciones/cliente/(:num)', 'Transacciones::getTransaccionesByCliente/$1');
+
+	$routes->get('usuarios', 'Usuarios::index');
+
 });	
 
 /*
