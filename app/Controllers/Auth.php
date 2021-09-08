@@ -1,11 +1,18 @@
 <?php namespace App\Controllers;
 
+use Config\Services;
 use App\Models\UsuarioModel;
 use CodeIgniter\API\ResponseTrait;
+use Firebase\JWT\JWT;
 
 class Auth extends BaseController
 {
-    use ResponseTrait; /* Para responder a los errores */
+    use ResponseTrait;
+
+    public function __construct()
+    {
+        helper('secure_password');
+    }
 
     public function login()
     {
@@ -14,19 +21,36 @@ class Auth extends BaseController
             $password = $this->request->getPost('password');
 
             $usuarioModel = new UsuarioModel();
-            $validateUsuario = $usuarioModel->where('username', $username)->find();
-
+            $validateUsuario = $usuarioModel->where('username', $username)->first();
+            
             if($validateUsuario == null)
                 return $this->failNotFound('Usuario no encontrado');
-            
+
             if(verifyPassword($password, $validateUsuario["password"])):
-                return $this->respond('Usuario encontrado');
+                $jwt = $this->generateJWT($validateUsuario);
+                return $this->respond($jwt);
+
             else:
                 return $this->failValidationErrors('Contraseña invalida');
-            endif;
+            endif; 
 
-        } catch (\Throwable $th) {
-            return $this->failServerError('Ha ocurrido un error en el servidor');
+        } catch (\Exception $e) {
+            return $this->failServerError('Ha ocurrido un error en el servidor '.$e);
         }
+    }
+
+    protected function generateJWT()
+    {
+        $key = Services::getSecretKey();
+        $time = time();
+
+        $playload = [
+            'aud' => base_url(),
+            'ait' => $time, // como entero el tiempo,
+            'exp' => $time + 60, // 
+        ];
+
+        $jwt = JWT::encode($playload, $key);
+        return $jwt;
     }
 }
