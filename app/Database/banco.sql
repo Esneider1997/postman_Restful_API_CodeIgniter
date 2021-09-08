@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 06, 2021 at 11:51 PM
+-- Generation Time: Sep 08, 2021 at 11:55 PM
 -- Server version: 10.4.19-MariaDB
 -- PHP Version: 8.0.7
 
@@ -87,6 +87,26 @@ INSERT INTO `cuenta` (`id`, `moneda`, `fondo`, `cliente_id`, `created_at`, `upda
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `rol`
+--
+
+CREATE TABLE `rol` (
+  `id` int(11) NOT NULL,
+  `nombre` varchar(45) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `rol`
+--
+
+INSERT INTO `rol` (`id`, `nombre`, `created_at`, `updated_at`) VALUES
+(1, 'Programador', '2021-09-07 21:33:27', '2021-09-07 21:33:27');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `tipo_transaccion`
 --
 
@@ -135,6 +155,34 @@ INSERT INTO `transaccion` (`id`, `cuenta_id`, `tipo_transaccion_id`, `monto`, `c
 (10, 1, 2, '9000.00', '2021-09-06 15:38:33', '2021-09-06 15:38:33'),
 (11, 3, 2, '107000.00', '2021-09-06 15:39:27', '2021-09-06 15:39:27');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `usuario`
+--
+
+CREATE TABLE `usuario` (
+  `id` int(11) NOT NULL,
+  `nombre` varchar(65) NOT NULL,
+  `username` varchar(10) NOT NULL,
+  `password` text NOT NULL,
+  `rol_id` int(11) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `usuario`
+--
+
+INSERT INTO `usuario` (`id`, `nombre`, `username`, `password`, `rol_id`, `created_at`, `updated_at`) VALUES
+(1, 'esneider buelvas', 'esneider', '$2y$10$Qyr3QNUlWLoEvacvFrC6w.5ytwWrJ2UZspdiYkFKFvcslaoygSmrG', 1, '2021-09-07 21:34:02', '2021-09-07 21:34:02'),
+(2, 'Juan Cuadrado', 'juancuadra', 'cuadrado', 1, '2021-09-08 19:15:50', '2021-09-08 19:15:50'),
+(3, 'Tercer usuario', 'TercerUsua', 'usuario', 1, '2021-09-08 19:17:52', '2021-09-08 19:17:52'),
+(4, 'Cuarto usuario', 'CuartoUsua', 'usuario', 1, '2021-09-08 19:31:24', '2021-09-08 19:31:24'),
+(5, 'Quinto usuario', 'QuintoUsua', 'usuario', 1, '2021-09-08 19:33:18', '2021-09-08 19:33:18'),
+(6, 'Sexto usuario', 'SextoUsuar', 'usuario', 1, '2021-09-08 19:43:31', '2021-09-08 19:43:31');
+
 --
 -- Indexes for dumped tables
 --
@@ -153,6 +201,12 @@ ALTER TABLE `cuenta`
   ADD KEY `fk_cuenta_cliente_idx` (`cliente_id`);
 
 --
+-- Indexes for table `rol`
+--
+ALTER TABLE `rol`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `tipo_transaccion`
 --
 ALTER TABLE `tipo_transaccion`
@@ -166,6 +220,13 @@ ALTER TABLE `transaccion`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_transaccion_cuenta1_idx` (`cuenta_id`),
   ADD KEY `fk_transaccion_tipo_transaccion1_idx` (`tipo_transaccion_id`);
+
+--
+-- Indexes for table `usuario`
+--
+ALTER TABLE `usuario`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_usuario_rol_idx` (`rol_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -184,6 +245,12 @@ ALTER TABLE `cuenta`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
+-- AUTO_INCREMENT for table `rol`
+--
+ALTER TABLE `rol`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `tipo_transaccion`
 --
 ALTER TABLE `tipo_transaccion`
@@ -194,6 +261,12 @@ ALTER TABLE `tipo_transaccion`
 --
 ALTER TABLE `transaccion`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- AUTO_INCREMENT for table `usuario`
+--
+ALTER TABLE `usuario`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Constraints for dumped tables
@@ -211,6 +284,12 @@ ALTER TABLE `cuenta`
 ALTER TABLE `transaccion`
   ADD CONSTRAINT `fk_transaccion_cuenta` FOREIGN KEY (`cuenta_id`) REFERENCES `cuenta` (`id`) ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_transaccion_tipo_transaccion` FOREIGN KEY (`tipo_transaccion_id`) REFERENCES `tipo_transaccion` (`id`) ON UPDATE CASCADE;
+
+--
+-- Constraints for table `usuario`
+--
+ALTER TABLE `usuario`
+  ADD CONSTRAINT `fk_usuario_rol` FOREIGN KEY (`rol_id`) REFERENCES `rol` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
