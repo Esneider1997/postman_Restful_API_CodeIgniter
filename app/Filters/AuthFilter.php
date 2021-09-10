@@ -8,6 +8,7 @@ use CodeIgniter\HTTP\ResponseInterface;
 use Config\Services;
 use Firebase\JWT\JWT;
 use Firebase\JWT\ExpiredException;
+use App\Models\RolModel;
 
 class AuthFilter implements FilterInterface
 {
@@ -24,7 +25,15 @@ class AuthFilter implements FilterInterface
             $arr = explode(' ', $authHeader);
             $jwt =  $arr[1];
 
-            JWT::decode($jwt, $key, ['HS256']);
+            $jwt = JWT::decode($jwt, $key, ['HS256']);
+
+            $rolModel = new Rolmodel();
+            $rol = $rolModel->find($jwt->data->rol);
+
+            if($rol == null)
+                return Services::response()->setStatusCode(ResponseInterface::HTTP_UNAUTHORIZED,'El rol del JWT es invalido');
+            return true;
+
         } catch (ExpiredException $ee) {
             return Services::response()->setStatusCode(ResponseInterface::HTTP_UNAUTHORIZED,'Su Token JWT ha expirado '.$ee);
         } catch (\Exception $e) {

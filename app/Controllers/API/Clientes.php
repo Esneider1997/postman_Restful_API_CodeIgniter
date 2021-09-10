@@ -6,14 +6,23 @@ use CodeIgniter\RESTful\ResourceController;
 class Clientes extends ResourceController
 {
 
-	public function __construct() {
+	public function __construct() 
+	{
 		$this->model = $this->setModel(new ClienteModel());
+		helper('access_rol');
 	}
 
 	public function index()
 	{
-		$clientes = $this->model->findAll();
-		return $this->respond($clientes); /* Permite contestar todas respuestas http, 100x, 200x, 300x, 400x */
+		try {
+			if(validateAccess(array('admin'), $this->request->getServer('HTTP_AUTHORIZATION')))
+			return $this->failServerError('El rol no tiene acceso a este recurso');
+				
+			$clientes = $this->model->findAll();
+			return $this->respond($clientes); /* Permite contestar todas respuestas http, 100x, 200x, 300x, 400x */
+		} catch (\Exception $e) {
+			return $this->failServerError('Ha ocurrido un error en el servidor');
+		}
 	}
 
 	public function create(){

@@ -38,7 +38,8 @@ $routes->post('/auth/login', 'Auth::login');
 
 
 $routes->group('api', ['namespace' => 'App\Controllers\API', 'filter' => 'AuthFilter' ], function($routes){
-	//http://localhost/App/api/clientes --> GET
+	
+	//Solo cueden consumir los administradores
 	$routes->get('clientes', 'Clientes::index');
 	$routes->post('clientes/create', 'Clientes::create');
 	$routes->get('clientes/edit/(:num)', 'Clientes::edit/$1');
@@ -69,12 +70,17 @@ $routes->group('api', ['namespace' => 'App\Controllers\API', 'filter' => 'AuthFi
 	$routes->put('cuentas/update/(:num)', 'Cuentas::update/$1');
 	$routes->delete('cuentas/delete/(:num)', 'Cuentas::delete/$1');
 
+	//Solo puede consumirla los administradores y los cajeros
 	$routes->get('transacciones', 'Transacciones::index');
 	$routes->post('transacciones/create', 'Transacciones::create');
 	$routes->get('transacciones/edit/(:num)', 'Transacciones::edit/$1');
 	$routes->put('transacciones/update/(:num)', 'Transacciones::update/$1');
 	$routes->delete('transacciones/delete/(:num)', 'Transacciones::delete/$1');
+	//Solo puede consumirla los administradores y los cajeros
+
+	//	Solo puede consumir los usuarios con el rol de cliente
 	$routes->get('transacciones/cliente/(:num)', 'Transacciones::getTransaccionesByCliente/$1');
+	//	Solo puede consumir los usuarios con el rol de cliente
 });	
 
 /*

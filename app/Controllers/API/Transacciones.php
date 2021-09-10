@@ -19,6 +19,16 @@ class Transacciones extends ResourceController
 	 */
 	public function index()
 	{
+		try {
+			if(validateAccess(array('admin', 'cajero'), $this->request->getServer('HTTP_AUTHORIZATION')))
+			return $this->failServerError('El rol no tiene acceso a este recurso');
+				
+			$transacciones = $this->model->findAll();
+			return $this->respond($transacciones);
+		} catch (\Exception $e) {
+			return $this->failServerError('Ha ocurrido un error en el servidor');
+		}
+		
 		$transacciones = $this->model->findAll();
 		return $this->respond($transacciones);
 	}

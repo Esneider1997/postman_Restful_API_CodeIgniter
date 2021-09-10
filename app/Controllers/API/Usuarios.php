@@ -68,4 +68,24 @@ class Usuarios extends ResourceController
         }
 
     }
+
+    public function delete($id = null)
+    { 
+        try {
+            if($id == null)
+                return $this->failValidationErrors('No se ha encontrado un ID valido');
+                
+            $usuarioVerificado = $this->model->find($id);
+            if($usuarioVerificado == null)
+                return $this->failValidationErrors('No se ha encontrado un cliente con el ID '.$id);
+            
+            if ($this->model->delete($id)):
+                return $this->respondDeleted($usuarioVerificado);
+            else:
+                return $this->failServerError('No se ha podido elimar el registro');
+			endif;
+        } catch (\Exception $e) {
+            return $this->failServerError('Ha ocurrido un problema en el servidor '.$e);
+        } 
+    }
 }
