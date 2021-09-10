@@ -28,7 +28,7 @@ class Auth extends BaseController
 
             if(verifyPassword($password, $validateUsuario["password"])):
                 $jwt = $this->generateJWT($validateUsuario);
-                return $this->respond($jwt);
+                return $this->respond(['Token' => $jwt], 201);
 
             else:
                 return $this->failValidationErrors('Contraseña invalida');
@@ -39,7 +39,7 @@ class Auth extends BaseController
         }
     }
 
-    protected function generateJWT()
+    protected function generateJWT($usuario)
     {
         $key = Services::getSecretKey();
         $time = time();
@@ -47,7 +47,13 @@ class Auth extends BaseController
         $playload = [
             'aud' => base_url(),
             'ait' => $time, // como entero el tiempo,
-            'exp' => $time + 60, // 
+            'exp' => $time + 300, // 
+            'data' => [
+                'nombre' => $usuario['nombre'],
+                'username' => $usuario['username'],
+                'rol' => $usuario['rol_id']
+
+            ]
         ];
 
         $jwt = JWT::encode($playload, $key);

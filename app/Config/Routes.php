@@ -36,22 +36,26 @@ $routes->get('/', 'Home::index');
 
 $routes->post('/auth/login', 'Auth::login');
 
-$routes->group('auth', ['namespace' => 'App\Controllers\API'], function ($routes){
-	$routes->get('usuarios', 'Usuarios::index');
-	$routes->post('usuarios/create', 'Usuarios::create');
-	$routes->get('usuarios/edit/(:num)', 'Usuarios::edit/$1');
-	$routes->put('usuarios/update/(:num)', 'Usuarios::update/$1');
-	
-});
 
-
-$routes->group('api', ['namespace' => 'App\Controllers\API'], function($routes){
+$routes->group('api', ['namespace' => 'App\Controllers\API', 'filter' => 'AuthFilter' ], function($routes){
 	//http://localhost/App/api/clientes --> GET
 	$routes->get('clientes', 'Clientes::index');
 	$routes->post('clientes/create', 'Clientes::create');
 	$routes->get('clientes/edit/(:num)', 'Clientes::edit/$1');
 	$routes->put('clientes/update/(:num)', 'Clientes::update/$1');
 	$routes->delete('clientes/delete/(:num)', 'Clientes::delete/$1');
+
+	$routes->get('usuarios', 'Usuarios::index');
+	$routes->post('usuarios/create', 'Usuarios::create');
+	$routes->get('usuarios/edit/(:num)', 'Usuarios::edit/$1');
+	$routes->put('usuarios/update/(:num)', 'Usuarios::update/$1');
+	$routes->put('usuarios/delete/(:num)', 'Usuarios::delete/$1');
+
+	$routes->get('roles', 'Roles::index');
+	$routes->post('roles/create', 'Roles::create');
+	$routes->get('roles/edit/(:num)', 'Roles::edit/$1');
+	$routes->put('roles/update/(:num)', 'Roles::update/$1');
+	$routes->put('roles/delete/(:num)', 'Roles::delete/$1');
 
 	$routes->get('tipostransaccion', 'TiposTransaccion::index');
 	$routes->post('tipostransaccion/create', 'TiposTransaccion::create');
