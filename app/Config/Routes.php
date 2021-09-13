@@ -37,7 +37,7 @@ $routes->get('/', 'Home::index');
 $routes->post('/auth/login', 'Auth::login');
 
 
-$routes->group('api', ['namespace' => 'App\Controllers\API', 'filter' => 'AuthFilter' ], function($routes){
+$routes->group('api', ['namespace' => 'App\Controllers\API'/* , 'filter' => 'AuthFilter'  */], function($routes){
 	
 	//Solo cueden consumir los administradores
 	$routes->get('clientes', 'Clientes::index');

@@ -15,7 +15,8 @@ class Clientes extends ResourceController
 	public function index()
 	{
 		try {
-			if(validateAccess(array('admin'), $this->request->getServer('HTTP_AUTHORIZATION')))
+			
+			if(!validateAccess(array('admin'), $this->request->getServer('HTTP_AUTHORIZATION')))
 			return $this->failServerError('El rol no tiene acceso a este recurso');
 				
 			$clientes = $this->model->findAll();

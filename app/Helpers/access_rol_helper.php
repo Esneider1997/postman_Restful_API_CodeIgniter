@@ -1,8 +1,8 @@
 <?php
 
-use App\Models\RolModel;
 use Config\Services;
 use Firebase\JWT\JWT;
+use App\Models\RolModel;
 
 function validateAccess($roles, $authHeader)
 {
@@ -20,11 +20,9 @@ function validateAccess($roles, $authHeader)
     if($rol == null)
         return false;
 
-    foreach ($roles as $key => $value):
-        if ($value != $rol['nombre']) 
-            return false;
-    endforeach;
+    if(!in_array($rol['nombre'], $roles)) 
+        return false;
 
-    return false;
+    return true;
     
 }

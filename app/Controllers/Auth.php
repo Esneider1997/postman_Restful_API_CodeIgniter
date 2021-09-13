@@ -20,7 +20,6 @@ class Auth extends BaseController
             $username = $this->request->getPost('username');
             $password = $this->request->getPost('password');
 
-            var_dump(hashPassword($password));
             $usuarioModel = new UsuarioModel();
 
             $validateUsuario = $usuarioModel->where('username', $username)->first();
