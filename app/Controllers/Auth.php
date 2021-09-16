@@ -7,14 +7,14 @@ use Firebase\JWT\JWT;
 
 class Auth extends BaseController
 {
-    use ResponseTrait;
+    /* use ResponseTrait;
 
     public function __construct()
     {
         helper('secure_password');
-    }
+    } */
 
-    public function login()
+    /* public function login()
     {
         try {
             $username = $this->request->getPost('username');
@@ -39,9 +39,9 @@ class Auth extends BaseController
         } catch (\Exception $e) {
             return $this->failServerError('Ha ocurrido un error en el servidor '.$e);
         }
-    }
+    } */
 
-    protected function generateJWT($usuario)
+    /* protected function generateJWT($usuario)
     {
         $key = Services::getSecretKey();
         $time = time();
@@ -60,5 +60,5 @@ class Auth extends BaseController
 
         $jwt = JWT::encode($playload, $key);
         return $jwt;
-    }
+    } */
 }

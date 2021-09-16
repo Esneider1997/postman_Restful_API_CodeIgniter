@@ -43,6 +43,7 @@ $routes->group('api', ['namespace' => 'App\Controllers\API'/* , 'filter' => 'Aut
 	$routes->get('clientes', 'Clientes::index');
 	$routes->post('clientes/create', 'Clientes::create');
 	$routes->get('clientes/edit/(:num)', 'Clientes::edit/$1');
+	$routes->post('clientes/updated/', 'Clientes::updated');
 	$routes->put('clientes/update/(:num)', 'Clientes::update/$1');
 	$routes->delete('clientes/delete/(:num)', 'Clientes::delete/$1');
 

@@ -14,16 +14,18 @@ class Clientes extends ResourceController
 
 	public function index()
 	{
-		try {
+		/* try {
 			
 			if(!validateAccess(array('admin'), $this->request->getServer('HTTP_AUTHORIZATION')))
 			return $this->failServerError('El rol no tiene acceso a este recurso');
 				
 			$clientes = $this->model->findAll();
-			return $this->respond($clientes); /* Permite contestar todas respuestas http, 100x, 200x, 300x, 400x */
+			return $this->respond($clientes); 
 		} catch (\Exception $e) {
 			return $this->failServerError('Ha ocurrido un error en el servidor');
-		}
+		} */
+		$clientes = $this->model->findAll();
+			return $this->respond($clientes); /* Permite contestar todas respuestas http, 100x, 200x, 300x, 400x */
 	}
 
 	public function create(){
@@ -31,7 +33,8 @@ class Clientes extends ResourceController
 			$cliente = $this->request->getJSON();
 			if ($this->model->insert($cliente)):
 				$cliente->id = $this->model->insertID();
-				return $this->respondCreated($cliente);
+				$cliente->act = 1;
+				return $this->respondCreated($cliente); 
 			else: 
 				return $this->failValidationErrors($this->model->validation->listErrors());
 			endif;
@@ -77,7 +80,23 @@ class Clientes extends ResourceController
 			return $this->failServerError('Ha ocurrido un error en el servidor');
 		}
 	}
-	
+
+	public function updated()
+	{
+		try {
+			$cliente = $this->request->getJSON();
+			if($this->model->save($cliente)):
+				$cliente->act = 2;
+				return $this->respondUpdated($cliente);
+			else:
+				return $this->failValidationErrors($this->model->validation->listErrors());
+			endif; 
+		} catch (\Exception $e) {
+			return $this->failServerError('Ha ocurrido un problema en el servidor'.$e);
+		}
+	}
+
+	/* 
 	public function delete($id = null)
 	{
 		try {
@@ -85,6 +104,8 @@ class Clientes extends ResourceController
 				return $this->failValidationErrors('No se ha pasado un Id valido');
 			
 			$clienteVerificado = $this->model->find($id);
+
+
 			if ($clienteVerificado == null )
 				return $this->failNotFound('No se ha encontrado un cliente con el id '.$id);
 		
@@ -96,6 +117,30 @@ class Clientes extends ResourceController
 			
 		} catch (\Exception $e) {
 			return $this->failServerError('Ha ocurrido un error en el servidor');
+		}
+	} */
+
+	public function delete($id = null)
+	{
+		try {
+
+			if ($id == null) 
+				return $this->failValidationErrors('No se ha pasado un Id valido');
+			
+			$clienteVerificado = $this->model->find($id);
+
+			if ($clienteVerificado == null )
+				return $this->failNotFound('No se ha encontrado un cliente con el id '.$id);
+
+			$data = [ "act" => 3, "id" => $id ];
+
+			if ($this->model->delete($id)):
+				return $this->respondDeleted($data);
+			else: 
+				return $this->failServerError('No se ha podido eliminar el registro');
+			endif;
+		} catch (\Throwable $th) {
+			return $this->failServerError('Ha ocurrido un problema en el servidor');
 		}
 	}
 }

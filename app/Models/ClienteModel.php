@@ -17,14 +17,14 @@ class ClienteModel extends Model{
     protected $validationRules = [
         'nombre'    => 'required|alpha_space|min_length[3]|max_length[75]',
         'apellido'  => 'required|alpha_space|min_length[3]|max_length[75]',
-        'telefono'  => 'required|alpha_numeric_space|min_length[8]|max_length[8]',
-        'correo'    => 'permit_empty|valid_email|max_length[85]',
+        /* 'telefono'  => 'required|alpha_numeric_space|min_length[8]|max_length[8]',
+        'correo'    => 'permit_empty|valid_email|max_length[85]', */
     ];
 
     protected $validationMessages = [
-        'correo'    => [
+        /* 'correo'    => [
             'valid_email' => 'Estimado usuario, debe ingresar un email valido'
-        ]
+        ] */
     ];
 
     protected $skipValidation = false;  /*  No se puede saltar validaciones que estan predefinidas*/
