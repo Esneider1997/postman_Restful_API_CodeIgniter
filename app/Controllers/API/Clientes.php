@@ -24,7 +24,8 @@ class Clientes extends ResourceController
 		} catch (\Exception $e) {
 			return $this->failServerError('Ha ocurrido un error en el servidor');
 		} */
-		$clientes = $this->model->findAll();
+
+			$clientes = $this->model->findAll();
 			return $this->respond($clientes); /* Permite contestar todas respuestas http, 100x, 200x, 300x, 400x */
 	}
 

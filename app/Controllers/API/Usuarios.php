@@ -2,6 +2,7 @@
 
 use App\Models\UsuarioModel;
 use CodeIgniter\RESTful\ResourceController;
+use App\Models\FileModel;
 
 class Usuarios extends ResourceController
 {
@@ -19,6 +20,7 @@ class Usuarios extends ResourceController
     public function create()
     {
         try {
+            
             $usuario = $this->request->getJSON();
             if($this->model->insert($usuario)):
                 $usuario->id = $this->model->insertID();
@@ -88,4 +90,77 @@ class Usuarios extends ResourceController
             return $this->failServerError('Ha ocurrido un problema en el servidor '.$e);
         } 
     }
+
+    public function cargarImagen()
+	{
+		$file = $this->request->getFile('image');
+
+		$profile_image = $file->getName();
+
+		// Renaming file before upload
+		$temp = explode(".",$profile_image);
+		$newfilename = round(microtime(true)) . '.' . end($temp);
+
+        $micarpeta = '../MedicinaIntegral/public/perfiles/';
+
+        if (!file_exists($micarpeta)) {
+
+            mkdir($micarpeta, 0777, true);
+        }
+
+		if ($file->move($micarpeta, $newfilename)) {
+
+			$fileModel = new FileModel();
+
+            $data = [
+                "file_name" => $newfilename,
+                "file_path" => '/public/perfiles/' . $newfilename
+            ];
+
+
+			if ($fileModel->insert($data)) {
+
+				$response = [
+					'status' => 200,
+					'error' => false,
+					'message' => 'documento cargado exitosamente',
+					'data' => []
+				];
+			} else {
+
+				$response = [
+					'status' => 500,
+					'error' => true,
+					'message' => 'No se pudo guardar la imagen',
+					'data' => []
+				];
+			}
+		} else {
+
+			$response = [
+				'status' => 500,
+				'error' => true,
+				'message' => 'No se pudo cargar la imagen.',
+				'data' => []
+			];
+		}
+
+		return $this->respondCreated($response);
+	}
+
+    /* public function updateImage()
+    { 
+        $fileModel = new FileModel();
+
+        $file = $this->request->getFile('image');
+
+        $response = [
+            'status' => 200,
+            "error" => false,
+            'messages' => 'Update Image Method',
+            'data' => []
+        ];
+
+        return $this->respondCreated($response);
+    } */
 }

@@ -4,7 +4,6 @@ namespace App\Controllers\API;
 
 use App\Models\RolModel;
 use CodeIgniter\RESTful\ResourceController;
-use phpDocumentor\Reflection\Types\This;
 
 class Roles extends ResourceController
 {
@@ -22,6 +21,7 @@ class Roles extends ResourceController
 	{
 		$roles = $this->model->findAll();
 		return $this->respond($roles);
+		//return $this->setResponseFormat('json')->respond($roles);
 	}
 
 	/**

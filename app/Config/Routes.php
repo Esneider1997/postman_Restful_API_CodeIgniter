@@ -53,6 +53,8 @@ $routes->group('api', ['namespace' => 'App\Controllers\API'/* , 'filter' => 'Aut
 	$routes->put('usuarios/update/(:num)', 'Usuarios::update/$1');
 	$routes->put('usuarios/delete/(:num)', 'Usuarios::delete/$1');
 
+	$routes->post('usuarios/cargar-imagen', 'Usuarios::cargarImagen');
+
 	$routes->get('roles', 'Roles::index');
 	$routes->post('roles/create', 'Roles::create');
 	$routes->get('roles/edit/(:num)', 'Roles::edit/$1');

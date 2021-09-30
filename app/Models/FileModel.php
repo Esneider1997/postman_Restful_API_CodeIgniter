@@ -1,35 +1,39 @@
-<?php namespace App\Models;
+<?php
+
+namespace App\Models;
 
 use CodeIgniter\Model;
 
-class UsuarioModel extends Model
+class FileModel extends Model
 {
-
-	protected $table                = 'usuario';
+	protected $DBGroup              = 'default';
+	protected $table                = 'files';
 	protected $primaryKey           = 'id';
-	
+	protected $useAutoIncrement     = true;
+	protected $insertID             = 0;
 	protected $returnType           = 'array';
-
+	protected $useSoftDeletes       = false;
 	protected $protectFields        = true;
-	protected $allowedFields        = ['nombre', 'username', 'password', 'imagen_nombre', 'imagen_ruta','rol_id'];
+	protected $allowedFields        = [
+		'file_name',
+		'file_path'
+	];
 
 	// Dates
-	protected $useTimestamps        = true;
+	protected $useTimestamps        = false;
 	protected $dateFormat           = 'datetime';
 	protected $createdField         = 'created_at';
 	protected $updatedField         = 'updated_at';
+	protected $deletedField         = 'deleted_at';
 
 	// Validation
-	protected $validationRules      = [
-		'imagen_nombre'		=> 'uploaded[imagen]|max_size[imagen,1024]' /* mime_in[imagen,image/jpg,image/jpeg/image/png]' */
-	];
-
+	protected $validationRules      = [];
 	protected $validationMessages   = [];
 	protected $skipValidation       = false;
-
+	protected $cleanValidationRules = true;
 
 	// Callbacks
-	/* protected $allowCallbacks       = true;
+	protected $allowCallbacks       = true;
 	protected $beforeInsert         = [];
 	protected $afterInsert          = [];
 	protected $beforeUpdate         = [];
@@ -37,5 +41,5 @@ class UsuarioModel extends Model
 	protected $beforeFind           = [];
 	protected $afterFind            = [];
 	protected $beforeDelete         = [];
-	protected $afterDelete          = []; */
+	protected $afterDelete          = [];
 }
